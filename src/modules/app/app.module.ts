@@ -19,22 +19,22 @@ import Config from '../../config';
       load: [...Config],
       isGlobal: true,
     }),
-    // MongooseModule.forRoot(process.env.MONGODB_URL as string, {
-    //   autoReconnect: true,
-    //   useCreateIndex: true,
-    //   reconnectTries: Number.MAX_VALUE,
-    //   reconnectInterval: 1000,
-    //   useNewUrlParser: true,
-    //   useUnifiedTopology: true,
-    // }),
-    // RedisModule.forRootAsync({
-    //   useFactory: (cfg: ConfigService) => ({
-    //     config: {
-    //       url: cfg.get('REDIS_URL'),
-    //     },
-    //   }),
-    //   inject: [ConfigService],
-    // }),
+    MongooseModule.forRoot(process.env.MONGODB_URL as string, {
+      autoReconnect: true,
+      useCreateIndex: true,
+      reconnectTries: Number.MAX_VALUE,
+      reconnectInterval: 1000,
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }),
+    RedisModule.forRootAsync({
+      useFactory: (cfg: ConfigService) => ({
+        config: {
+          url: cfg.get('REDIS_URL'),
+        },
+      }),
+      inject: [ConfigService],
+    }),
     MailerModule.forRootAsync({
       useFactory: (cfg: ConfigService) => ({
         transport: {
@@ -58,7 +58,7 @@ import Config from '../../config';
       }),
       inject: [ConfigService],
     }),
-    // V1Module,
+    V1Module,
   ],
   controllers: [AppController],
   providers: [AppService, AppGateway],
