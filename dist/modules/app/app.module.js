@@ -10,9 +10,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
+const nestjs_redis_1 = require("@liaoliaots/nestjs-redis");
 const config_1 = require("@nestjs/config");
+const mongoose_1 = require("@nestjs/mongoose");
 const mailer_1 = require("@nestjs-modules/mailer");
 const handlebars_adapter_1 = require("@nestjs-modules/mailer/dist/adapters/handlebars.adapter");
+const v1_module_1 = __importDefault(require("../v1/v1.module"));
 const app_controller_1 = __importDefault(require("./app.controller"));
 const app_service_1 = __importDefault(require("./app.service"));
 const app_gateway_1 = __importDefault(require("./app.gateway"));
@@ -26,6 +29,22 @@ AppModule = __decorate([
                 envFilePath: [`${process.cwd()}/.env.${process.env.NODE_ENV}`, '.env'],
                 load: [...config_2.default],
                 isGlobal: true,
+            }),
+            mongoose_1.MongooseModule.forRoot(process.env.MONGODB_URL, {
+                autoReconnect: true,
+                useCreateIndex: true,
+                reconnectTries: Number.MAX_VALUE,
+                reconnectInterval: 1000,
+                useNewUrlParser: true,
+                useUnifiedTopology: true,
+            }),
+            nestjs_redis_1.RedisModule.forRootAsync({
+                useFactory: (cfg) => ({
+                    config: {
+                        url: cfg.get('REDIS_URL'),
+                    },
+                }),
+                inject: [config_1.ConfigService],
             }),
             mailer_1.MailerModule.forRootAsync({
                 useFactory: (cfg) => ({
@@ -50,6 +69,7 @@ AppModule = __decorate([
                 }),
                 inject: [config_1.ConfigService],
             }),
+            v1_module_1.default,
         ],
         controllers: [app_controller_1.default],
         providers: [app_service_1.default, app_gateway_1.default],

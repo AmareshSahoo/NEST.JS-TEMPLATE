@@ -13,7 +13,6 @@ const common_1 = require("@nestjs/common");
 const core_1 = require("@nestjs/core");
 const auth_module_1 = __importDefault(require("./auth/auth.module"));
 const users_module_1 = __importDefault(require("./users/users.module"));
-const admin_panel_module_1 = __importDefault(require("./admin/admin-panel.module"));
 const routes = [
     {
         path: '/v1',
@@ -31,7 +30,6 @@ V1Module = __decorate([
             core_1.RouterModule.register(routes),
             auth_module_1.default,
             users_module_1.default,
-            admin_panel_module_1.default,
         ],
     })
 ], V1Module);
